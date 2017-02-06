@@ -3,7 +3,6 @@
 //set up----------------------------------
 
 var express = require('express');
-var app = express();
 var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -17,9 +16,10 @@ var session = require('express-session');
 var configDB = require('./config/database.js');
 
 // configuration ---------------------------
-mongoose.connect(confidgDB.url);
+var app = express();
+mongoose.connect(configDB.url);
 
-// require('./config/passport')(passport); //pass passport for configuration
+require('./config/passport')(passport); //pass passport for configuration
 
 // set up express application
 app.use(morgan('dev'));
