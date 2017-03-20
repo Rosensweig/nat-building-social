@@ -1,7 +1,10 @@
 {
-  "name": "Natural Building Social",
+  "name": "Natural-Building-Social",
   "main": "server.js",
+  "description": "A social network for sharing natural building information, strategies, ideas, and progress.",
+  "repository": "https://github.com/Rosensweig/nat-building-social",
   "dependencies": {
+    "async": "^2.1.5",
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.0.0",
     "connect-flash": "~0.1.1",
@@ -9,6 +12,7 @@
     "ejs": "~0.8.5",
     "express": "~4.0.0",
     "express-session": "~1.0.0",
+    "fs": "0.0.1-security",
     "imgur": "^0.2.0",
     "method-override": "~1.0.0",
     "mongoose": "^4.8.1",
@@ -18,7 +22,9 @@
     "passport-facebook": "~1.0.2",
     "passport-google-oauth": "~0.1.5",
     "passport-local": "~0.1.6",
-    "passport-twitter": "~1.0.2"
+    "passport-twitter": "~1.0.2",
+    "simple-oauth2": "^1.1.0",
+    "unirest": "^0.5.1"
   },
   "scripts": {
     "start": "node server.js",

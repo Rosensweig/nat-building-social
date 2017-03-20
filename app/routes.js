@@ -1,5 +1,7 @@
 const {Post} = require('./models/post.js');
 const {Media} = require('./models/media.js');
+const fileSystem = require('fs');
+const async = require('async');
 
 module.exports = function(app, passport, imgur, auth, upload) {
 
@@ -207,52 +209,84 @@ module.exports = function(app, passport, imgur, auth, upload) {
 		    if(err) {
 		        return res.end("Error uploading file.");
 		    }
-		    var imagePaths = [];
 
-		    // for (file in req.files) {
-		    // 	console.log("for...in loop with file: "+file);
-		    // 	imagePaths.push(file.path);
-		    // }
+		    var count = 0;
+		    var numFiles = req.files.length;
+		    req.body.media = [];
 
-		 //    for (var i=0; i<req.files.length; i++) {
-		 //    	console.log(`for loop with req.files[${i}]: ${req.files[i]}`);
-		 //    	imagePaths.push(req.files[i].path);
-		 //    }
+	    	for (var i=0; i<req.files.length; i++) {
+	    		doUpload(i);
+	    	}
 
-		 //    console.log('---files---',req.files);
-		 //    console.log("imagePaths: "+imagePaths);
-		
-		
-			// // on callback of successful upload, then do imgur.uploadFile
-			// imgur.uploadImages(imagePaths, "File", auth.imgurAuth.albumID)
-		 //    .then(function (json) {
-		 //        console.log("imgur response: " + json.data);
-		 //        // on success of imgur upload, delete file from uploads/
-		 //    })
-		 //    .catch(err => {
-		 //        console.error(err.message);
-		 //    });
-			
-		    const requiredFields = ['title', 'content'];
-		    for (let i=0; i<requiredFields.length; i++) {
-		    	const field = requiredFields[i];
-		    	if (!(field in req.body)) {
-		    		const message = `Missing \`${field}\` in request body`;
-		    		console.error(message);
-		    		return res.status(400).send(message);
+		    function doUpload(i){
+		    	imgur.uploadFile(req.files[i].path,auth.imgurAuth.albumID)
+		    		.then(function(json){
+		    			console.log('--',req.files[i].path,json.data.link);
+		    			req.body.media.push(formMedia(json));
+		    			fileSystem.unlink(req.files[i].path, (err) => {
+		    				if (err) {
+		    					console.log(err);
+		    				} else {
+		    					console.log(`Deleted file ${req.files[i].path}`);
+		    				}
+		    			});
+		    			checkComplete();
+		    			return i;
+		    		})
+		    		.catch(function(err){
+		    			console.error('---imgur error---',err.message);
+		    		});
+		    }
+
+		    function formMedia(json){
+		    	var media = {
+		    		user: req.user._id,
+		    		link: json.data.link
+		    	};
+		    	var id = "";
+
+		    	Media.create(media)
+		    	.then(mediaFile => {
+		    		console.log("--media file created-- ", mediaFile);
+		    		console.log("media file ID is: ", mediaFile._id);
+		    		id= mediaFile._id;
+
+		    		console.log("id is: ", id);
+		    		return id;
+		    	})
+		    	.catch(err => console.log("--error forming media file-- ", err));
+		    }
+
+		    function checkComplete(){
+		    	count++;
+		    	if(count==numFiles){
+	    		    const requiredFields = ['title', 'content'];
+	    		    for (let i=0; i<requiredFields.length; i++) {
+	    		    	const field = requiredFields[i];
+	    		    	if (!(field in req.body)) {
+	    		    		const message = `Missing \`${field}\` in request body`;
+	    		    		console.error(message);
+	    		    		return res.status(400).send(message);
+	    		    	}
+	    		    }
+	    		    Post
+	    		    .create({
+	    				title: req.body.title,
+	    				content: req.body.content,
+	    				author: req.user._id,
+	    				media: req.body.media
+	    		    })
+	    		    .then(newPost => res.status(201).json(newPost))
+	    		    .catch(err => {
+	    		        console.error(err);
+	    		        res.status(500).json({error: 'Something went wrong'});
+	    		    });
 		    	}
 		    }
-		    Post
-		    .create({
-				title: req.body.title,
-				content: req.body.content,
-				author: req.user._id
-		    })
-		    .then(newPost => res.status(201).json(newPost))
-		    .catch(err => {
-		        console.error(err);
-		        res.status(500).json({error: 'Something went wrong'});
-		    });
+
+		    console.log('---files---',req.files);
+			
+		    
 		}); //ends multer upload
 	}); //ends POST
 
