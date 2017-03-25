@@ -2,8 +2,11 @@ const {Post} = require('./models/post.js');
 const {Media} = require('./models/media.js');
 const fileSystem = require('fs');
 const async = require('async');
+const imgur = require('../config/imgur.js');
 
-module.exports = function(app, passport, imgur, auth, upload) {
+imgur.setup();
+
+module.exports = function(app, passport, auth, upload) {
 
 
 // normal routes ===============================================================
@@ -205,6 +208,8 @@ module.exports = function(app, passport, imgur, auth, upload) {
 // POST
 	app.post('/post',(req, res) => {
 		// upload the image to uploads/
+
+		//imgur.send()
 		upload(req,res,function(err) {
 		    if(err) {
 		        return res.end("Error uploading file.");
@@ -221,6 +226,7 @@ module.exports = function(app, passport, imgur, auth, upload) {
 		    function doUpload(i){
 		    	imgur.uploadFile(req.files[i].path,auth.imgurAuth.albumID)
 		    		.then(function(json){
+		    			var json = JSON.parse(json.raw_body);
 		    			console.log('--',req.files[i].path,json.data.link);
 		    			req.body.media.push(formMedia(json));
 		    			fileSystem.unlink(req.files[i].path, (err) => {
@@ -239,22 +245,16 @@ module.exports = function(app, passport, imgur, auth, upload) {
 		    }
 
 		    function formMedia(json){
-		    	var media = {
+		    	console.log('-----formMedia, json.data-----',json.data);
+		    	var mediaData = {
 		    		user: req.user._id,
 		    		link: json.data.link
 		    	};
 		    	var id = "";
 
-		    	Media.create(media)
-		    	.then(mediaFile => {
-		    		console.log("--media file created-- ", mediaFile);
-		    		console.log("media file ID is: ", mediaFile._id);
-		    		id= mediaFile._id;
-
-		    		console.log("id is: ", id);
-		    		return id;
-		    	})
-		    	.catch(err => console.log("--error forming media file-- ", err));
+		    	var media = new Media(mediaData);
+		    	media.save();
+		    	return media._id;
 		    }
 
 		    function checkComplete(){

@@ -22,82 +22,82 @@ const tokenConfig = {
 const oauth2 = require('simple-oauth2').create(credentials);
 var token = null;
 
- 
-function setup() {
-  return new Promise(function (fulfill, reject) {
-    console.log('----starting setup----');
-    oauth2.ownerPassword
-      .getToken(tokenConfig)
-      .then((result) => {
-        token = oauth2.accessToken.create(result);
-        console.log("In setup function, and token is: ",token);
-        fulfill(token);
-      })
-      // .then(token => {
-      // token.refresh()
-      // }).then((result) => {
-      //   token = result;
-      //   fulfill(token);
-      // })
-  });
-}
- 
-// Check if the token is expired. If expired it is refreshed. 
-function refreshToken(token) {
-  return new Promise(function(fulfill, reject) {
-    console.log("In refreshToken(). Token is: ", token);
-    if (token.expired()) {
-    	 
-    	// Promises 
-    	token.refresh()
-    	.then((result) => {
-    		token = result;
-        fulfill(token);
-    	}).catch(err => {
-        console.log("Error refreshing token: ", err);
-        reject(err);
-      });
-    };
-    fulfill(token);
-  });
-}
 
-function uploadFile(path, albumID) {
-  var data = null;
-  console.log("test: "+token.token);
-  refreshToken(token)
-  .then(function (token) {
-    console.log("UPLOAD FILE, token is: ",token);
-    unirest.post(auth.imgurAuth.baseURL)
-    .headers({
-      'Authorization': 'Bearer '+token.token.access_token
-    })
-    .send({
-      image: path, 
-      album: albumID, 
-      type: 'URL'
-    })
-    .end(function (response) {
-      console.log("Imgur response: ", response.body);
-      data = response;
+
+//setup();
+  // .then((token) => {
+  //   console.log('----upload token----');
+  //   uploadFile('./uploads/butterfly.jpg', auth.imgurAuth.albumID);
+  // }) 
+  // .catch(err => {
+  //   console.log("Access Token Error", err);
+  //   return err;
+  // });
+
+
+module.exports = { 
+
+  setup: function() {
+    return new Promise(function (fulfill, reject) {
+      console.log('----starting setup----');
+      oauth2.ownerPassword
+        .getToken(tokenConfig)
+        .then((result) => {
+          token = oauth2.accessToken.create(result);
+          console.log("In setup function, and token is: ",token);
+          fulfill(token);
+        })
     });
-  });
-  return data
-}
+  },
+   
 
 
-// oauth2.ownerPassword
-//   .getToken(tokenConfig)
-//   .then((result) => {
-//     token = oauth2.accessToken.create(result);
-//     console.log("In setup function, and token is: ",token);
-//     return token;
-  setup()
-  .then((token) => {
-    console.log('----upload token----');
-    uploadFile('../uploads/butterfly.jpg', auth.imgurAuth.albumID);
-  })
-  .catch(err => {
-    console.log("Access Token Error", err);
-    return err;
-  });
+  // Check if the token is expired. If expired it is refreshed. 
+  refreshToken: function(token) {
+    return new Promise(function(fulfill, reject) {
+      console.log("In refreshToken(). Token is: ", token);
+      if (token.expired()) {
+      	 
+      	// Promises 
+      	token.refresh()
+      	.then((result) => {
+      		token = result;
+          fulfill(token);
+      	}).catch(err => {
+          console.log("Error refreshing token: ", err);
+          reject(err);
+        });
+      };
+      fulfill(token);
+    });
+  },
+
+
+  uploadFile: function(path, albumID) {
+    var self = this;
+    return new Promise( function(fulfill, reject) {
+      self.refreshToken(token)
+      .then(function (token) {
+        console.log("UPLOAD FILE, token is: ",token);
+        console.log('-----path-----',path);
+        unirest.post(auth.imgurAuth.baseURL)
+        .headers({
+          'Authorization': 'Bearer '+token.token.access_token,
+          'Content-Type': 'multipart/form-data'
+        })
+        .field({
+          album: albumID, 
+          type: 'file'
+        })
+        .attach('image', './'+path)
+        .end(function (response) {
+          console.log("Imgur response: ", response.body);
+          fulfill(response);
+        });
+      });
+    })
+  }
+
+
+
+};

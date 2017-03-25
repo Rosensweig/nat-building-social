@@ -7,7 +7,7 @@ var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
-var imgur = require('imgur');
+// var imgur = require('imgur');
 
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -32,7 +32,7 @@ mongoose.Promise = global.Promise;
 // configuration ---------------------------
 var app = express();
 mongoose.connect(configDB.url);
-imgur.setCredentials(auth.imgurAuth.email, auth.imgurAuth.password, auth.imgurAuth.clientID);
+//imgur.setCredentials(auth.imgurAuth.email, auth.imgurAuth.password, auth.imgurAuth.clientID);
 
 require('./config/passport')(passport); //pass passport for configuration
 
@@ -50,7 +50,7 @@ app.use(passport.session());
 app.use(flash());
 
 // routes -------------------------------
-require('./app/routes.js')(app, passport, imgur, auth, upload); 
+require('./app/routes.js')(app, passport, auth, upload); 
 
 // launch -------------------------------
 app.listen(port);
