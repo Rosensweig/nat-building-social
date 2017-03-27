@@ -20,19 +20,7 @@ const tokenConfig = {
 };
 
 const oauth2 = require('simple-oauth2').create(credentials);
-var token = null;
-
-
-
-//setup();
-  // .then((token) => {
-  //   console.log('----upload token----');
-  //   uploadFile('./uploads/butterfly.jpg', auth.imgurAuth.albumID);
-  // }) 
-  // .catch(err => {
-  //   console.log("Access Token Error", err);
-  //   return err;
-  // });
+var token = null; //use setup() to get token
 
 
 module.exports = { 
@@ -48,7 +36,7 @@ module.exports = {
           fulfill(token);
         })
     });
-  },
+  }, // closes setup()
    
 
 
@@ -70,7 +58,7 @@ module.exports = {
       };
       fulfill(token);
     });
-  },
+  }, //closes refreshToken()
 
 
   uploadFile: function(path, albumID) {
@@ -96,8 +84,8 @@ module.exports = {
         });
       });
     })
-  }
+  } //closes uploadFile()
 
 
 
-};
+}; //closes module.exports

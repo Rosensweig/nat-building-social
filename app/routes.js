@@ -248,7 +248,11 @@ module.exports = function(app, passport, auth, upload) {
 		    	console.log('-----formMedia, json.data-----',json.data);
 		    	var mediaData = {
 		    		user: req.user._id,
-		    		link: json.data.link
+		    		link: json.data.link,
+		    		width: json.data.width,
+		    		height: json.data.height,
+		    		deleteHash: json.data.deletehash,
+		    		imgID: json.data.id
 		    	};
 		    	var id = "";
 
@@ -289,6 +293,16 @@ module.exports = function(app, passport, auth, upload) {
 		    
 		}); //ends multer upload
 	}); //ends POST
+
+
+	app.get('/feed', (req, res) => {
+		Post.find().limit(10).exec((err, posts) => {
+			if (err) {
+				console.log("-----Database error-----", err);
+				res.status(500).json(err);
+			}
+		});
+	});
 
 
 

@@ -16,8 +16,9 @@ var mediaSchema = mongoose.Schema({
 	tags: [String], // tag photo with different subjects
 	likes: [String], // array of user IDs, for users who liked post
 	link: String,
-	video: Boolean, // true for video files. False for photos.
-	//thumbnail: String // separate link not needed, because of imgur's system. Add 't' or 'm'
+	video: {type: Boolean, default: false}, // true for video files. False for photos.
+	deleteHash: String
+	// thumbnail: String // separate link not needed, because of imgur's system. Add 't' or 'm'
 		// to main link for small and medium thumbnails respectively
 	// comments: [String] // Comments will now be searched out dynamically, instead of stored here
 });
