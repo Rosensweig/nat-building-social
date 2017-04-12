@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- views/media.ejs -->
+<html lang="en">
+<head>
+    <title> <%= "Natural Building Social — "+post.title %> </title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        body        { padding-top:80px; word-wrap:break-word; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Natural Building Social</h1>
+
+    <main class="media">
+        <h3> <%= p.title %> </h3>
+        <h5> <%= m.created.toString() %> </h5>
+        <img src=<%='"'+m.link+'"' %>>
+        <p> <%= m.description %>  </p>
+
+        <form enctype="text/plain" method="post">
+            <label for="comment">Post Comments: 
+            <textarea rows="10" cols="50" name="comment" id="comment" placeholder="Enter comment text here." required="required"></textarea>
+            <button type="submit">Post</button>
+        </form>
+
+    </main>
+
+</div>
+</body>
+</html>

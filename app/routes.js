@@ -206,7 +206,7 @@ module.exports = function(app, passport, auth, upload) {
 
 
 // POST
-	app.post('/post',(req, res) => {
+	app.post('/post', isLoggedIn, (req, res) => {
 		// upload the image to uploads/
 
 		//imgur.send()
@@ -240,25 +240,26 @@ module.exports = function(app, passport, auth, upload) {
 		    			return i;
 		    		})
 		    		.catch(function(err){
-		    			console.error('---imgur error---',err.message);
+		    			console.error('---imgur error---', err.message);
 		    		});
 		    }
 
 		    function formMedia(json){
-		    	console.log('-----formMedia, json.data-----',json.data);
+		    	console.log('-----formMedia, json.data-----', json.data);
 		    	var mediaData = {
 		    		user: req.user._id,
 		    		link: json.data.link,
 		    		width: json.data.width,
 		    		height: json.data.height,
 		    		deleteHash: json.data.deletehash,
-		    		imgID: json.data.id
+		    		imgID: json.data.id,
+		    		ext: json.data.link.split(".").pop()
 		    	};
 		    	var id = "";
 
 		    	var media = new Media(mediaData);
 		    	media.save();
-		    	return media._id;
+		    	return {imgID: media.imgID, ext: media.ext};
 		    }
 
 		    function checkComplete(){
@@ -280,7 +281,13 @@ module.exports = function(app, passport, auth, upload) {
 	    				author: req.user._id,
 	    				media: req.body.media
 	    		    })
-	    		    .then(newPost => res.status(201).json(newPost))
+	    		    .then(newPost => {
+	    		    	console.log(newPost);
+	    		    	res.render('singlePost.ejs', {
+	    		    		post: newPost
+	    		    	});
+	    		    	//res.status(201).json(newPost);
+	    		    })
 	    		    .catch(err => {
 	    		        console.error(err);
 	    		        res.status(500).json({error: 'Something went wrong'});
@@ -295,13 +302,20 @@ module.exports = function(app, passport, auth, upload) {
 	}); //ends POST
 
 
-	app.get('/feed', (req, res) => {
+	app.get('/feed', isLoggedIn, (req, res) => {
 		Post.find().limit(10).exec((err, posts) => {
 			if (err) {
 				console.log("-----Database error-----", err);
 				res.status(500).json(err);
 			}
+			res.render('feed.ejs', {
+				feed: posts
+			});
 		});
+	});
+
+	app.post('/media', function (req, res) {
+		//res.render('/media');
 	});
 
 
