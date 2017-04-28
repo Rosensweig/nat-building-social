@@ -2,34 +2,43 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Natural Building Social — Recent Posts</title>
+    <title> Natural Building Social — Recent Posts </title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="script">
-    <style>
-        body        { padding-top:80px; word-wrap:break-word; }
-    </style>
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-<main>
 <div class="container">
+    <h1>Natural Building Social</h1>
+    <% for (var i=0; i<feed.length; i++) {%>
+        <div class="postCont">
+        <article class="post">
+            <h3> <%= feed[i].title %> </h3>
+            <h5> <%= feed[i].created.toString() %> </h5>
+            <p> <%= feed[i].content %>  </p>
+            <% console.log("feed[i].media=" +feed[i].media) %>
+            <% console.log('First thumbnail: http://i.imgur.com/' +feed[i].media[0].imgID+ 'm.' +feed[i].media[0].ext) %>
 
-    <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> New Post</h1>
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-    </div>
+            <div class="image-cont">
+                <% for (var j=0; j<feed[i].media.length; j++) { %>
+                    <% var thumbnail = 'http://i.imgur.com/' +feed[i].media[j].imgID+ 'b.' +feed[i].media[j].ext %>
+                    <% console.log(thumbnail) %>
+                    <a href="/media/<%= feed[i].media[j].id+ '/' +feed[i]._id +'/'+ j+ '/' + feed[i].media.length %>"><img src="<%=thumbnail%>" alt='user content photo'></a>
+                <% } %>
+            </div>
 
-    <div class="row">
-        <form action="/post" enctype="multipart/form-data" method="post">
-            <label for="imageInput">Add Image(s): 
-            <input type="file" name="imageInput" id="imageInput" size="50" multiple="multiple" accept="image/*"></label>
-            <input type="text" name="title" id="title" size="50" placeholder="Enter Title">
-            <textarea rows="10" cols="50" name="content" id="content" placeholder="Enter post text here." required="required"></textarea>
-            <button type="submit">Post</button>
-        </form>
-    </div>
+            <form enctype="text/plain" method="post">
+                <label for="comment">Post a Comment: <br>
+                <textarea rows="5" cols="50" name="comment" id="comment" placeholder="Enter comment text here." required="required"></textarea><br>
+                <button type="submit">Post</button>
+            </form>
+
+
+            
+        </article>
+        </div>
+    <% } %> 
 
 </div>
-</main>
 </body>
 </html>

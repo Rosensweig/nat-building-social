@@ -32,7 +32,6 @@ module.exports = {
         .getToken(tokenConfig)
         .then((result) => {
           token = oauth2.accessToken.create(result);
-          console.log("In setup function, and token is: ",token);
           fulfill(token);
         })
     });
@@ -43,7 +42,6 @@ module.exports = {
   // Check if the token is expired. If expired it is refreshed. 
   refreshToken: function(token) {
     return new Promise(function(fulfill, reject) {
-      console.log("In refreshToken(). Token is: ", token);
       if (token.expired()) {
       	 
       	// Promises 
@@ -66,8 +64,6 @@ module.exports = {
     return new Promise( function(fulfill, reject) {
       self.refreshToken(token)
       .then(function (token) {
-        console.log("UPLOAD FILE, token is: ",token);
-        console.log('-----path-----',path);
         unirest.post(auth.imgurAuth.baseURL)
         .headers({
           'Authorization': 'Bearer '+token.token.access_token,

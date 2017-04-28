@@ -6,9 +6,6 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="styles/main.css">
-    <style>
-        body        { padding-top:80px; word-wrap:break-word; }
-    </style>
 </head>
 <body>
 <div class="container">
@@ -21,12 +18,6 @@
         <% console.log("post.media= "+post.media);%>
         <% console.log('First thumbnail: http://i.imgur.com/' +post.media[0].imgID+ 'm.' +post.media[0].ext) %>
 
-        <form enctype="text/plain" method="post">
-            <label for="comment">Post Comments: 
-            <textarea rows="10" cols="50" name="comment" id="comment" placeholder="Enter comment text here." required="required"></textarea>
-            <button type="submit">Post</button>
-        </form>
-
         <div class="image-cont">
             <% for (var i=0; i<post.media.length; i++) { %>
                 <% var thumbnail = 'http://i.imgur.com/' +post.media[i].imgID+ 'b.' +post.media[i].ext; %>
@@ -34,6 +25,14 @@
                 <a href="/media?<%= 'm=' +post.media[i]._id+ '&p=' +post._id %>"><img src="<%=thumbnail%> alt='user content photo'"></a>
             <% } %>
         </div>
+
+        <form enctype="text/plain" method="post">
+            <label for="comment">Post a Comment: 
+            <textarea rows="10" cols="50" name="comment" id="comment" placeholder="Enter comment text here." required="required"></textarea>
+            <button type="submit">Post</button>
+        </form>
+
+        
     </main>
 
 </div>

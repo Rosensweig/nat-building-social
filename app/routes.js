@@ -223,6 +223,7 @@ module.exports = function(app, passport, auth, upload) {
 	    		doUpload(i);
 	    	}
 
+
 		    function doUpload(i){
 		    	imgur.uploadFile(req.files[i].path,auth.imgurAuth.albumID)
 		    		.then(function(json){
@@ -259,7 +260,7 @@ module.exports = function(app, passport, auth, upload) {
 
 		    	var media = new Media(mediaData);
 		    	media.save();
-		    	return {imgID: media.imgID, ext: media.ext};
+		    	return {id: media._id, imgID: media.imgID, ext: media.ext};
 		    }
 
 		    function checkComplete(){
@@ -302,8 +303,18 @@ module.exports = function(app, passport, auth, upload) {
 	}); //ends POST
 
 
+	    	// /posts/?page=5&offset=10
+	    	// /posts/5/10
+	    	// req.query.page
+	    	// req.query.offset
+	    	
+
+	    	//var skip = 10;
+	    	// var page = 5;
+	    	// Posts.find({userid: req.user._id, $limit: 10, $skip: skip*page, date: {$gte: 2017-04-01, $lte: 2017-05-01}})
+
 	app.get('/feed', isLoggedIn, (req, res) => {
-		Post.find().limit(10).exec((err, posts) => {
+		Post.find().sort("-created").skip(0).limit(10).exec((err, posts) => {
 			if (err) {
 				console.log("-----Database error-----", err);
 				res.status(500).json(err);
@@ -314,10 +325,26 @@ module.exports = function(app, passport, auth, upload) {
 		});
 	});
 
-	app.post('/media', function (req, res) {
-		//res.render('/media');
+	app.get('/media/:mediaID/:postID/:index/:length', isLoggedIn, function (req, res) {
+		var media = Media.findOne({_id: req.params.mediaID});
+		var post = Post.findOne({_id: req.params.postID});
+
+		Promise.all([
+			media, 
+			post
+		]).then( ([media, post]) => {
+			console.log("Promises complete, media= "+media+"\n and post= "+post);
+			res.render('media.ejs', {
+				media: media,
+				post: post,
+				index: parseInt(req.params.index),
+				len: parseInt(req.params.length)
+			})
+		});
+
 	});
 
+	//app.get('/post')
 
 
 

@@ -5,9 +5,9 @@
 var express = require('express');
 var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
+var mongoosePaginate = require("mongoose-paginate");
 var passport = require('passport');
 var flash = require('connect-flash');
-// var imgur = require('imgur');
 
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -32,7 +32,6 @@ mongoose.Promise = global.Promise;
 // configuration ---------------------------
 var app = express();
 mongoose.connect(configDB.url);
-//imgur.setCredentials(auth.imgurAuth.email, auth.imgurAuth.password, auth.imgurAuth.clientID);
 
 require('./config/passport')(passport); //pass passport for configuration
 
@@ -40,7 +39,7 @@ require('./config/passport')(passport); //pass passport for configuration
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser());
-
+app.use(express.static('public'));
 app.set('view engine', 'ejs'); // set up ejs for templating 
 
 //required for passport
