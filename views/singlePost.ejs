@@ -2,37 +2,19 @@
 <!-- views/singlePost.ejs -->
 <html lang="en">
 <head>
-    <title> <%= "Natural Building Social — "+post.title %> </title>
+    <% var i=0 %>
+    <title> <%= "Natural Building Social — "+feed[i].title %> </title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
+<%- include('partials/nav.ejs', {user: user}) %>
 <div class="container">
     <h1>Natural Building Social</h1>
-
-    <main class="post">
-        <h3> <%= post.title %> </h3>
-        <h5> <%= post.created.toString() %> </h5>
-        <p> <%= post.content %>  </p>
-        <% console.log("post.media= "+post.media);%>
-        <% console.log('First thumbnail: http://i.imgur.com/' +post.media[0].imgID+ 'm.' +post.media[0].ext) %>
-
-        <div class="image-cont">
-            <% for (var i=0; i<post.media.length; i++) { %>
-                <% var thumbnail = 'http://i.imgur.com/' +post.media[i].imgID+ 'b.' +post.media[i].ext; %>
-                <% console.log(thumbnail) %>
-                <a href="/media?<%= 'm=' +post.media[i]._id+ '&p=' +post._id %>"><img src="<%=thumbnail%> alt='user content photo'"></a>
-            <% } %>
-        </div>
-
-        <form enctype="text/plain" method="post">
-            <label for="comment">Post a Comment: 
-            <textarea rows="10" cols="50" name="comment" id="comment" placeholder="Enter comment text here." required="required"></textarea>
-            <button type="submit">Post</button>
-        </form>
-
-        
+    
+    <div class="postCont">
+        <%- include('partials/postPartial.ejs', {feed: feed, i: i, limit:20}); %>
     </main>
 
 </div>

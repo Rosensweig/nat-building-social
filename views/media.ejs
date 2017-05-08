@@ -5,14 +5,15 @@
     <title> <%= "Natural Building Social — "+post.title %> </title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
+<%- include('partials/nav.ejs', {user: user}) %>
 <div class="container">
     <h1>Natural Building Social</h1>
 
-    <main class="media">
-        <h3> <a href="/post"><%= post.title %></a> </h3>
+    <main class="media postCont">
+        <h3> <a href="/post/<%=post._id%>"><%= post.title %></a> </h3>
         <h5> <%= media.created.toString() %> </h5>
         <% var prev; var next; if (index==0) {prev=len-1} else {prev=index-1}; %>
         <% if (index==len-1) {next=0} else {next=index+1}; %>
@@ -23,8 +24,8 @@
         <p> <%= media.description || "No description yet." %>  </p>
 
         <form enctype="text/plain" method="post">
-            <label for="comment">Post Comments:
-            <textarea rows="10" cols="50" name="comment" id="comment" placeholder="Enter comment text here." required="required"></textarea>
+            <label for="comment">Post Comments: <br>
+            <textarea rows="10" cols="50" name="comment" id="comment" placeholder="Enter comment text here." required="required"></textarea> <br>
             <button type="submit">Post</button>
         </form>
 

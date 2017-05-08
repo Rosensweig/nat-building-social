@@ -12,3 +12,7 @@ var commentSchema = mongoose.Schema({
 	authorID: String,
 	parentID: {type: String, default: null}
 });
+
+const Comment = mongoose.model('Comment', commentSchema);
+
+module.exports = {Comment};

@@ -1,0 +1,8 @@
+<div class="postCont">
+    <p><img src="<%=user.imageURL%>" class="userIcon"></p>
+    <h4><%=user.description%></h4>
+    <h2><%=user.name%>'s posts:<h2>
+    <% for (var i=0; i<feed.length; i++) {%>
+    	<h3><a href="singlePost/<%=feed[i]._id%>"><%=feed[i].title%></a></h3>
+    <% } %>
+</div>

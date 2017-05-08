@@ -1,5 +1,6 @@
 const {Post} = require('./models/post.js');
 const {Media} = require('./models/media.js');
+const {Comment} = require('./models/comment.js');
 const fileSystem = require('fs');
 const async = require('async');
 const imgur = require('../config/imgur.js');
@@ -14,13 +15,6 @@ module.exports = function(app, passport, auth, upload) {
 	// show the home page (will also have our login links)
 	app.get('/', function(req, res) {
 		res.render('index.ejs');
-	});
-
-	// PROFILE SECTION =========================
-	app.get('/profile', isLoggedIn, function(req, res) {
-		res.render('profile.ejs', {
-			user : req.user
-		});
 	});
 
 	// POST SECTION =========================
@@ -50,7 +44,7 @@ module.exports = function(app, passport, auth, upload) {
 
 		// process the login form
 		app.post('/login', passport.authenticate('local-login', {
-			successRedirect : '/profile', // redirect to the secure profile section
+			successRedirect : '/feed', // redirect to the secure profile section
 			failureRedirect : '/login', // redirect back to the signup page if there is an error
 			failureFlash : true // allow flash messages
 		}));
@@ -63,7 +57,7 @@ module.exports = function(app, passport, auth, upload) {
 
 		// process the signup form
 		app.post('/signup', passport.authenticate('local-signup', {
-			successRedirect : '/profile', // redirect to the secure profile section
+			successRedirect : '/feed', // redirect to the secure profile section
 			failureRedirect : '/signup', // redirect back to the signup page if there is an error
 			failureFlash : true // allow flash messages
 		}));
@@ -76,21 +70,21 @@ module.exports = function(app, passport, auth, upload) {
 		// handle the callback after facebook has authenticated the user
 		app.get('/auth/facebook/callback',
 			passport.authenticate('facebook', {
-				successRedirect : '/profile',
+				successRedirect : '/feed',
 				failureRedirect : '/'
 			}));
 
-	// twitter --------------------------------
+	// // twitter --------------------------------
 
-		// send to twitter to do the authentication
-		app.get('/auth/twitter', passport.authenticate('twitter', { scope : 'email' }));
+	// 	// send to twitter to do the authentication
+	// 	app.get('/auth/twitter', passport.authenticate('twitter', { scope : 'email' }));
 
-		// handle the callback after twitter has authenticated the user
-		app.get('/auth/twitter/callback',
-			passport.authenticate('twitter', {
-				successRedirect : '/profile',
-				failureRedirect : '/'
-			}));
+	// 	// handle the callback after twitter has authenticated the user
+	// 	app.get('/auth/twitter/callback',
+	// 		passport.authenticate('twitter', {
+	// 			successRedirect : '/profile',
+	// 			failureRedirect : '/'
+	// 		}));
 
 
 	// google ---------------------------------
@@ -101,7 +95,7 @@ module.exports = function(app, passport, auth, upload) {
 		// the callback after google has authenticated the user
 		app.get('/auth/google/callback',
 			passport.authenticate('google', {
-				successRedirect : '/profile',
+				successRedirect : '/feed',
 				failureRedirect : '/'
 			}));
 
@@ -114,7 +108,7 @@ module.exports = function(app, passport, auth, upload) {
 			res.render('connect-local.ejs', { message: req.flash('loginMessage') });
 		});
 		app.post('/connect/local', passport.authenticate('local-signup', {
-			successRedirect : '/profile', // redirect to the secure profile section
+			successRedirect : '/feed', // redirect to the secure profile section
 			failureRedirect : '/connect/local', // redirect back to the signup page if there is an error
 			failureFlash : true // allow flash messages
 		}));
@@ -127,21 +121,21 @@ module.exports = function(app, passport, auth, upload) {
 		// handle the callback after facebook has authorized the user
 		app.get('/connect/facebook/callback',
 			passport.authorize('facebook', {
-				successRedirect : '/profile',
+				successRedirect : '/feed',
 				failureRedirect : '/'
 			}));
 
-	// twitter --------------------------------
+	// // twitter --------------------------------
 
-		// send to twitter to do the authentication
-		app.get('/connect/twitter', passport.authorize('twitter', { scope : 'email' }));
+	// 	// send to twitter to do the authentication
+	// 	app.get('/connect/twitter', passport.authorize('twitter', { scope : 'email' }));
 
-		// handle the callback after twitter has authorized the user
-		app.get('/connect/twitter/callback',
-			passport.authorize('twitter', {
-				successRedirect : '/profile',
-				failureRedirect : '/'
-			}));
+	// 	// handle the callback after twitter has authorized the user
+	// 	app.get('/connect/twitter/callback',
+	// 		passport.authorize('twitter', {
+	// 			successRedirect : '/profile',
+	// 			failureRedirect : '/'
+	// 		}));
 
 
 	// google ---------------------------------
@@ -152,7 +146,7 @@ module.exports = function(app, passport, auth, upload) {
 		// the callback after google has authorized the user
 		app.get('/connect/google/callback',
 			passport.authorize('google', {
-				successRedirect : '/profile',
+				successRedirect : '/feed',
 				failureRedirect : '/'
 			}));
 
@@ -207,9 +201,7 @@ module.exports = function(app, passport, auth, upload) {
 
 // POST
 	app.post('/post', isLoggedIn, (req, res) => {
-		// upload the image to uploads/
 
-		//imgur.send()
 		upload(req,res,function(err) {
 		    if(err) {
 		        return res.end("Error uploading file.");
@@ -228,13 +220,10 @@ module.exports = function(app, passport, auth, upload) {
 		    	imgur.uploadFile(req.files[i].path,auth.imgurAuth.albumID)
 		    		.then(function(json){
 		    			var json = JSON.parse(json.raw_body);
-		    			console.log('--',req.files[i].path,json.data.link);
 		    			req.body.media.push(formMedia(json));
 		    			fileSystem.unlink(req.files[i].path, (err) => {
 		    				if (err) {
 		    					console.log(err);
-		    				} else {
-		    					console.log(`Deleted file ${req.files[i].path}`);
 		    				}
 		    			});
 		    			checkComplete();
@@ -246,7 +235,6 @@ module.exports = function(app, passport, auth, upload) {
 		    }
 
 		    function formMedia(json){
-		    	console.log('-----formMedia, json.data-----', json.data);
 		    	var mediaData = {
 		    		user: req.user._id,
 		    		link: json.data.link,
@@ -285,7 +273,7 @@ module.exports = function(app, passport, auth, upload) {
 	    		    .then(newPost => {
 	    		    	console.log(newPost);
 	    		    	res.render('singlePost.ejs', {
-	    		    		post: newPost
+	    		    		feed: [newPost]
 	    		    	});
 	    		    	//res.status(201).json(newPost);
 	    		    })
@@ -300,7 +288,7 @@ module.exports = function(app, passport, auth, upload) {
 			
 		    
 		}); //ends multer upload
-	}); //ends POST
+	}); //ends POST /post
 
 
 	    	// /posts/?page=5&offset=10
@@ -311,20 +299,72 @@ module.exports = function(app, passport, auth, upload) {
 
 	    	//var skip = 10;
 	    	// var page = 5;
-	    	// Posts.find({userid: req.user._id, $limit: 10, $skip: skip*page, date: {$gte: 2017-04-01, $lte: 2017-05-01}})
+	    	// Post.find({userid: req.user._id, $limit: 10, $skip: skip*page, date: {$gte: 2017-04-01, $lte: 2017-05-01}})
 
+	app.post('/comment', isLoggedIn, (req, res) => {
+		// console.log('Request body---',req.body);
+		// console.log('Full request---', req);
+		Comment
+	    .create({
+			comment: req.body.comment,
+			authorID: req.user._id,
+			postID: req.body.postID
+	    })
+	    .then(comment => {
+	    	// console.log("Comment successfully posted: \n"+comment);
+	    	res.status(200).json(comment);
+	    })
+	    // .then(post => {
+	    // 	console.log("Found post: "+post);
+	    // 	res.render('singlePost.ejs', {
+	    // 		feed: [post]
+	    // 	});
+	    // })
+	    .catch(err => {
+	        console.error(err);
+	        res.status(500).json({error: 'Something went wrong'});
+	    });
+
+	}); //ends POST /feed
+
+
+
+	// GET
+
+	// get a feed of posts
 	app.get('/feed', isLoggedIn, (req, res) => {
+		var postsArray = [];
+		var count = 0;
 		Post.find().sort("-created").skip(0).limit(10).exec((err, posts) => {
 			if (err) {
 				console.log("-----Database error-----", err);
 				res.status(500).json(err);
 			}
-			res.render('feed.ejs', {
-				feed: posts
-			});
+			postsArray = posts;
+			for (var i=0; i<posts.length; i++) {
+				findComments(i);
+			}
 		});
+
+		function findComments(i){
+			Comment.find({postID: postsArray[i]._id}, function(err,comments){
+				postsArray[i].comments = comments;
+				checkComplete();
+			});
+		}
+
+		function checkComplete(){
+			count++;
+			if(count == postsArray.length){
+				res.render('feed.ejs', {
+					feed: postsArray,
+					user: req.user
+				});
+			}
+		}
 	});
 
+	// get a single media file
 	app.get('/media/:mediaID/:postID/:index/:length', isLoggedIn, function (req, res) {
 		var media = Media.findOne({_id: req.params.mediaID});
 		var post = Post.findOne({_id: req.params.postID});
@@ -338,18 +378,44 @@ module.exports = function(app, passport, auth, upload) {
 				media: media,
 				post: post,
 				index: parseInt(req.params.index),
-				len: parseInt(req.params.length)
+				len: parseInt(req.params.length),
+				user: req.user
 			})
 		});
 
 	});
 
-	//app.get('/post')
+	//get a single post
+	app.get('/post/:postID', isLoggedIn, function (req, res) {
+		Post.findOne({_id: req.params.postID}).exec().then(post => {
+			res.render('singlePost.ejs', {
+				feed: [post]
+			})
+		})
+	})
+
+
+	app.get('/profile/:userID', isLoggedIn, function(req, res) {
+		var selfProfile= (req.params.userID==req.user._id);
+		var user;
+		if (selfProfile) {
+			user=req.user;
+		} else {
+			user = User.findOne({_id: req.params.userID});
+		}
+		Post.find({author:req.params.userID}).sort("-created").then(feed => {
+			res.render('profile.ejs', {
+				user : user,
+				selfProfile: selfProfile,
+				feed: feed
+			});
+		})
+		
+	});
 
 
 
 }; // ends module.exports
-
 
 
 // route middleware to ensure user is logged in

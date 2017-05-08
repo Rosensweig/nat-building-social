@@ -1,0 +1,35 @@
+    <div class="row iconCont">
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-4">
+            <div class="local"><h3 class="text-success"><span class="fa fa-user"></span> Local</h3></div>
+
+            <% if (user.local.email) { %>
+                <a href="/unlink/local" class="btn btn-success">Unlink</a>
+            <% } else { %>
+                <a href="/connect/local" class="btn btn-success">Connect Local</a>
+            <% } %>
+        </div>
+
+        <!-- FACEBOOK INFORMATION -->
+        <div class="col-sm-4">
+            <div class="facebook"><h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3></div>
+
+            <% if (user.facebook.token) { %>
+                <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
+            <% } else { %>
+                <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
+            <% } %>
+        </div>
+
+        <!-- GOOGLE INFORMATION -->
+        <div class="col-sm-4">
+            <div class="google"><h3 class="text-danger"><span class="fa fa-google-plus"></span> Google+</h3></div>
+
+            <% if (user.google.token) { %>
+
+                <a href="/unlink/google" class="btn btn-danger">Unlink</a>
+            <% } else { %>
+                <a href="/connect/google" class="btn btn-danger">Connect Google</a>
+            <% } %>
+        </div>
+    </div>

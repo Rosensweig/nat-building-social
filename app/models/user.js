@@ -7,8 +7,12 @@ var bcrypt = require('bcrypt-nodejs');
 //define the schema for the user model
 var userSchema = mongoose.Schema({
 	local : {
+		name: String,
 		email : String,
-		password : String
+		password : String,
+		imageID: String,
+		imageURL: {type:String, default: "/images/userIcon.png"},
+		description: {type: String, default: "No description yet."}
 	},
 	facebook : {
 		id : String,
@@ -28,7 +32,34 @@ var userSchema = mongoose.Schema({
 		email : String,
 		name : String
 	}
+
 });
+
+userSchema.virtual("name").get(function(){
+	if (this.local.name) {
+		return this.local.name;
+	} else if (this.google.name) {
+		return this.google.name;
+	} else if (this.facebook.name) {
+		return this.facebook.name;
+	} else return "No name yet."
+});
+
+userSchema.virtual("description").get(function(){
+	if (this.local.description) {
+		return this.local.description;
+	} else return "This user has not written a description yet."
+});
+
+userSchema.virtual("imageURL").get(function(){
+	return this.local.imageURL;
+});
+
+userSchema.virtual("imageID").get(function(){
+	if (this.local.imageID) {
+		return this.local.imageID;
+	} else return undefined;
+})
 
 // methods ----------------------------
 // generating a hash

@@ -1,0 +1,34 @@
+<div class="postCont">
+    <article class="post" id="<%=feed[i]._id%>">
+        <h3> <a href="/post/<%=feed[i]._id%>"><%= feed[i].title %></a> </h3>
+        <h5> Author: <%=feed[i].author%> </h5>
+        <h5> <%= feed[i].created.toString() %> </h5>
+        <p> <%= feed[i].content %>  </p>
+
+        
+        <div class="image-cont">
+            <% for (var j=0; j<feed[i].media.length&&j<limit; j++) { %>
+                <% var thumbnail = 'http://i.imgur.com/' +feed[i].media[j].imgID+ 'b.' +feed[i].media[j].ext %>
+                <a href="/media/<%= feed[i].media[j].id+ '/' +feed[i]._id +'/'+ j+ '/' + feed[i].media.length %>"><img src="<%=thumbnail%>" alt='user content photo'></a>
+            <% } %>
+        </div>
+
+        <p>Comments: <%= feed[i].comments.length %></p>
+        <div class='comments'>
+            <% for (var j=0; j<feed[i].comments.length; j++) { %>
+                <div class='singleComment'>
+                    <p>
+                        <%= feed[i].comments[j].comment %>
+                    </p>
+                </div>
+            <% } %>
+        </div>
+
+        <form action="/feed" method="post">
+            <input type="hidden" name="postID" class="postID" value="<%=feed[i]._id%>"/>
+            <p><label for="comment">Post a Comment:</label></p>
+            <p><textarea rows="5" cols="50" name="comment" class="comment" placeholder="Enter comment text here." required="required"></textarea></p>
+            <p><button type="submit">Post</button></p>
+        </form>
+    </article>
+</div>

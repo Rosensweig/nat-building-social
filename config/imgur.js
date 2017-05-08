@@ -27,7 +27,6 @@ module.exports = {
 
   setup: function() {
     return new Promise(function (fulfill, reject) {
-      console.log('----starting setup----');
       oauth2.ownerPassword
         .getToken(tokenConfig)
         .then((result) => {
@@ -75,7 +74,6 @@ module.exports = {
         })
         .attach('image', './'+path)
         .end(function (response) {
-          console.log("Imgur response: ", response.body);
           fulfill(response);
         });
       });

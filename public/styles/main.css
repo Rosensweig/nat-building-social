@@ -36,3 +36,68 @@ h1 {
 form > * {
 	display: block;
 }
+
+img {
+	max-width: 100%;
+}
+
+/* Nav Bar */
+nav {
+    background-color: rgba(255,255,255,0.2);
+    overflow: hidden;
+}
+
+nav a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+nav a:hover {
+    background-color: rgba(0,0,0,0.3);
+    color: white;
+}
+
+nav a.active {
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+}
+
+/*Profile page*/
+.local, .facebook, .google {
+	display: inline-block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	text-align: center;
+	line-height: 1;
+}
+
+.local *, .facebook *, .google * {
+	text-align: center;
+	line-height: 1;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.iconCont {
+	background-color: rgba(255,255,255,0.8);
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+}
+
+.col-sm-4 {
+	margin-bottom:3px;
+}
+
+.userIcon {
+	float: left;
+	margin-right: 10px;
+}

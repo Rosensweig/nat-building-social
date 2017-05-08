@@ -5,40 +5,18 @@
     <title> Natural Building Social — Recent Posts </title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
+<%- include('partials/nav.ejs', {user: user}) %>
 <div class="container">
     <h1>Natural Building Social</h1>
     <% for (var i=0; i<feed.length; i++) {%>
-        <div class="postCont">
-        <article class="post">
-            <h3> <%= feed[i].title %> </h3>
-            <h5> <%= feed[i].created.toString() %> </h5>
-            <p> <%= feed[i].content %>  </p>
-            <% console.log("feed[i].media=" +feed[i].media) %>
-            <% console.log('First thumbnail: http://i.imgur.com/' +feed[i].media[0].imgID+ 'm.' +feed[i].media[0].ext) %>
-
-            <div class="image-cont">
-                <% for (var j=0; j<feed[i].media.length; j++) { %>
-                    <% var thumbnail = 'http://i.imgur.com/' +feed[i].media[j].imgID+ 'b.' +feed[i].media[j].ext %>
-                    <% console.log(thumbnail) %>
-                    <a href="/media/<%= feed[i].media[j].id+ '/' +feed[i]._id +'/'+ j+ '/' + feed[i].media.length %>"><img src="<%=thumbnail%>" alt='user content photo'></a>
-                <% } %>
-            </div>
-
-            <form enctype="text/plain" method="post">
-                <label for="comment">Post a Comment: <br>
-                <textarea rows="5" cols="50" name="comment" id="comment" placeholder="Enter comment text here." required="required"></textarea><br>
-                <button type="submit">Post</button>
-            </form>
-
-
-            
-        </article>
-        </div>
+        <%- include('partials/postPartial.ejs', {feed: feed, i: i, limit: 8}); %>
     <% } %> 
 
 </div>
+<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+<script src="scripts/app.js"></script>
 </body>
 </html>
