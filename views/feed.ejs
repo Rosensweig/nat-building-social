@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title> Natural Building Social — Recent Posts </title>
+    <title>Natural Building Social — Recent Posts</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="/styles/main.css">
@@ -10,13 +10,18 @@
 <body>
 <%- include('partials/nav.ejs', {user: user}) %>
 <div class="container">
-    <h1>Natural Building Social</h1>
+	<%var leftDisabled=""; if (parseInt(page)<=1) {leftDisabled=' class="disabled"'}%>
+	<%var rightDisabled=""; if (parseInt(page)*parseInt(perPage)>=parseInt(count)) {rightDisabled=' class="disabled"'}%>
+    <h1><a href="/feed/<%=perPage+'/'+(parseInt(page)-1)%>"<%-leftDisabled%> id="previous">&lt;</a> Natural Building Social <a href="/feed/<%=perPage+'/'+(parseInt(page)+1)%>"<%-rightDisabled%> id="next">&gt;</a></h1>
     <% for (var i=0; i<feed.length; i++) {%>
-        <%- include('partials/postPartial.ejs', {feed: feed, i: i, limit: 8}); %>
+        <%- include('partials/postPartial.ejs', {post: feed[i], comments: comments[feed[i]._id], users: users, limit: 8}); %>
     <% } %> 
 
 </div>
+<form>
+    <input type="hidden" id="userName" value="<%=user.name%>">
+</form>
 <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
-<script src="scripts/app.js"></script>
+<script src="/scripts/app.js"></script>
 </body>
 </html>

@@ -1,5 +1,8 @@
+var userName;
+
 $(document).ready(function() {
 
+	userName= $("#userName").val();
 
 	$("form").on("click", "button", function(event) {
 		event.preventDefault();
@@ -11,6 +14,12 @@ $(document).ready(function() {
 	$("input").keypress(function (event) {
 		if (event.which == 13) {
 			$('button').click();
+			return false;
+		}
+	});
+
+	$("a").on("click", function(event){
+		if ($(this).hasClass("disabled")) {
 			return false;
 		}
 	});
@@ -31,7 +40,6 @@ function postComment(comment, postID, callback) {
 }
 
 function displayData(data) {
-	// console.log("Data returned from comment form: "+Object.keys(data));
 	$('#'+data.postID+' .comment').val('');
-	$('#'+data.postID+' .comments').append('<div class="singleComment"><p>'+data.comment+'</p></div>');
+	$('#'+data.postID+' .comments').append('<div class="singleComment"><p><a href="/profile/'+data.authorID+'">'+userName+'</a> wrote on '+data.created.toString()+'</p><p>'+data.comment+'</p></div>');
 }

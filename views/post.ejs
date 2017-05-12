@@ -12,23 +12,16 @@
 <%- include('partials/nav.ejs', {user: user}) %>
 <div class="container">
     
-
-        <div class="page-header text-center">
-            <h1><span class="fa fa-anchor"></span> New Post</h1>
-            <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-        </div>
+            <h1>Natural Building Social — New Post</h1>
 
     <div class="postCont">
-        <div class="row">
-            <form action="/post" enctype="multipart/form-data" method="post">
-                <label for="imageInput">Add Image(s): 
-                <input type="file" name="imageInput" id="imageInput" size="50" multiple="multiple" accept="image/*"></label>
-                <input type="text" name="title" id="title" size="50" placeholder="Enter Title">
-                <textarea rows="10" cols="50" name="content" id="content" placeholder="Enter post text here." required="required"></textarea>
-                <button type="submit">Post</button>
-            </form>
-        </div>
-
+        <form action="/post" enctype="multipart/form-data" method="post">
+            <label for="imageInput">Add Image(s): 
+            <input type="file" name="imageInput" id="imageInput" size="50" multiple="multiple" accept="image/*"></label>
+            <input type="text" name="title" id="title" size="50" placeholder="Enter Title">
+            <textarea rows="10" cols="50" name="content" id="content" placeholder="Enter post text here." required="required"></textarea>
+            <button type="submit">Post</button>
+        </form>
     </div>
 </div>
 </main>

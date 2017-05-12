@@ -1,31 +1,34 @@
 <div class="postCont">
-    <article class="post" id="<%=feed[i]._id%>">
-        <h3> <a href="/post/<%=feed[i]._id%>"><%= feed[i].title %></a> </h3>
-        <h5> Author: <%=feed[i].author%> </h5>
-        <h5> <%= feed[i].created.toString() %> </h5>
-        <p> <%= feed[i].content %>  </p>
+    <article class="post" id="<%=post._id%>">
+        <h3> <a href="/post/<%=post._id%>"><%= post.title %></a> </h3>
+        <h5> Author: <a href="/profile/<%=post.author%>"><%=users[post.author]%></a> </h5>
+        <h5> <%= post.created.toString() %> </h5>
+        <p> <%= post.content %>  </p>
 
         
         <div class="image-cont">
-            <% for (var j=0; j<feed[i].media.length&&j<limit; j++) { %>
-                <% var thumbnail = 'http://i.imgur.com/' +feed[i].media[j].imgID+ 'b.' +feed[i].media[j].ext %>
-                <a href="/media/<%= feed[i].media[j].id+ '/' +feed[i]._id +'/'+ j+ '/' + feed[i].media.length %>"><img src="<%=thumbnail%>" alt='user content photo'></a>
+            <% for (var j=0; j<post.media.length&&j<limit; j++) { %>
+                <% var thumbnail = 'http://i.imgur.com/' +post.media[j].imgID+ 'b.' +post.media[j].ext %>
+                <a href="/media/<%= post.media[j].id+ '/' +post._id +'/'+ j+ '/' + post.media.length %>"><img src="<%=thumbnail%>" alt='user content photo'></a>
             <% } %>
         </div>
 
-        <p>Comments: <%= feed[i].comments.length %></p>
+        <p>Comments: <%= comments.length %></p>
         <div class='comments'>
-            <% for (var j=0; j<feed[i].comments.length; j++) { %>
+            <% for (var j=0; j<comments.length; j++) { %>
                 <div class='singleComment'>
                     <p>
-                        <%= feed[i].comments[j].comment %>
+                        <a href="/profile/<%=comments[j].authorID%>"><%= users[comments[j].authorID] %></a> wrote on <%= comments[j].created%>:
+                    </p>
+                    <p>
+                        <%= comments[j].comment %>
                     </p>
                 </div>
             <% } %>
         </div>
 
         <form action="/feed" method="post">
-            <input type="hidden" name="postID" class="postID" value="<%=feed[i]._id%>"/>
+            <input type="hidden" name="postID" class="postID" value="<%=post._id%>"/>
             <p><label for="comment">Post a Comment:</label></p>
             <p><textarea rows="5" cols="50" name="comment" class="comment" placeholder="Enter comment text here." required="required"></textarea></p>
             <p><button type="submit">Post</button></p>

@@ -23,7 +23,7 @@ body {
 	word-wrap:break-word;
 }
 
-h1 {
+h1, h1>a, h1>a:active, h1>a:hover {
 	text-align: center;
 	margin-top: 0px;
 	margin-bottom: 20px;
@@ -33,12 +33,22 @@ h1 {
 	text-shadow: 1px 1px 5px rgba(150, 150, 150, 0.75);
 }
 
+h1>a.disabled, h1>a.disabled:active, h1>a.disabled:hover {
+	color:grey;
+	text-decoration: none;
+}
+
 form > * {
 	display: block;
+	margin-bottom: 3px;
 }
 
 img {
 	max-width: 100%;
+}
+
+.singleComment {
+	background-color: rgba(0,0,0,0.15);
 }
 
 /* Nav Bar */
@@ -100,4 +110,10 @@ nav a.active {
 .userIcon {
 	float: left;
 	margin-right: 10px;
+}
+
+button.delete {
+	font-size: 10px;
+	background-color: red;
+	color: white;
 }

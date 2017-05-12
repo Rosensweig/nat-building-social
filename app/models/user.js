@@ -42,7 +42,7 @@ userSchema.virtual("name").get(function(){
 		return this.google.name;
 	} else if (this.facebook.name) {
 		return this.facebook.name;
-	} else return "No name yet."
+	} else return "No name yet"
 });
 
 userSchema.virtual("description").get(function(){
@@ -50,6 +50,10 @@ userSchema.virtual("description").get(function(){
 		return this.local.description;
 	} else return "This user has not written a description yet."
 });
+
+userSchema.virtual("description").set(function(description){
+	this.local.description= description;
+})
 
 userSchema.virtual("imageURL").get(function(){
 	return this.local.imageURL;

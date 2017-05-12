@@ -1,8 +1,18 @@
 <div class="postCont">
     <p><img src="<%=user.imageURL%>" class="userIcon"></p>
-    <h4><%=user.description%></h4>
+    <div class="description">
+	    <% if (selfProfile) { %>
+	    	<button class="editDescription">Edit Description</button>
+	    <% } %>
+<h4 id="userDescription"><%=user.description%></h4>
+    </div>
     <h2><%=user.name%>'s posts:<h2>
     <% for (var i=0; i<feed.length; i++) {%>
-    	<h3><a href="singlePost/<%=feed[i]._id%>"><%=feed[i].title%></a></h3>
+    	<h3>
+    	<% if (selfProfile) {%>
+	    		<button class="delete" id="<%=feed[i]._id%>">X</button>
+    		<% } %>
+		<a href="/post/<%=feed[i]._id%>"><%=feed[i].title%></a>
+		</h3>
     <% } %>
 </div>

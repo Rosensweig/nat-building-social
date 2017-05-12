@@ -13,10 +13,15 @@
 <div class="container">
     <h1>Natural Building Social</h1>
     
-    <div class="postCont">
-        <%- include('partials/postPartial.ejs', {feed: feed, i: i, limit:20}); %>
+    <main>
+        <%- include('partials/postPartial.ejs', {post: feed[i], comments: comments[feed[i]._id], users: users, limit:20}); %>
     </main>
 
 </div>
+<form>
+	<input type="hidden" id="userName" value="<%=user.name%>">
+</form>
+<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+<script src="/scripts/app.js"></script>
 </body>
 </html>
