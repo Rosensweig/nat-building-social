@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var mongoosePaginate = require("mongoose-paginate");
 var passport = require('passport');
 var flash = require('connect-flash');
+require('dot-env');
 
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
