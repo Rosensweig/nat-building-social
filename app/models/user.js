@@ -16,19 +16,19 @@ var userSchema = mongoose.Schema({
 	},
 	facebook : {
 		id : String,
-		token : String,
+		token : {type: String, default: null},
 		email : String,
 		name : String
 	},
 	twitter : {
 		id : String,
-		token : String,
+		token : {type: String, default: null},
 		displayName : String,
 		username : String
 	},
 	google : {
 		id : String,
-		token : String,
+		token : {type: String, default: null},
 		email : String,
 		name : String
 	}
