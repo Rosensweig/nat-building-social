@@ -14,7 +14,6 @@
     "express": "~4.0.0",
     "express-session": "~1.0.0",
     "fs": "0.0.1-security",
-    "imgur": "^0.2.0",
     "method-override": "~1.0.0",
     "mongoose": "^4.8.1",
     "mongoose-paginate": "^5.0.3",

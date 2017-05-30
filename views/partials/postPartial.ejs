@@ -3,7 +3,7 @@
         <h3> <a href="/post/<%=post._id%>"><%= post.title %></a> </h3>
         <h5> Author: <a href="/profile/<%=post.author%>"><%=users[post.author]%></a> </h5>
         <h5> <%= post.created.toString() %> </h5>
-        <p> <%= post.content %>  </p>
+        <p> <%-post.content.replace('\n', '</p>\n<p>')%>  </p>
 
         
         <div class="image-cont">
@@ -18,10 +18,10 @@
             <% for (var j=0; j<comments.length; j++) { %>
                 <div class='singleComment'>
                     <p>
-                        <a href="/profile/<%=comments[j].authorID%>"><%= users[comments[j].authorID] %></a> wrote on <%= comments[j].created%>:
+                        <a href="/profile/<%=comments[j].authorID%>"><%=users[comments[j].authorID]%></a> wrote on <%= comments[j].created%>:
                     </p>
                     <p>
-                        <%= comments[j].comment %>
+                        <%=comments[j].comment%>
                     </p>
                 </div>
             <% } %>

@@ -72,8 +72,8 @@ function editDescription(description) {
 		url: "/profile/"+user._id,
 		data: {description:description},
 		success: function(msg) {
-			console.log("Profile edit successful: " +msg);
-			$('.description').html('<button class="editDescription">Edit Description</button><h4><span id="userDescription">'+description+'</span></h4>');
+			var desc = '<h4>'+msg.local.description.replace('\n', '</h4><h4>')+'</h4>';
+			$('.description').html('<button class="editDescription">Edit Description</button><span id="userDescription">'+desc+'</span>');
 		},
 		error: function(err) {
 			console.log("Problem editing profile: " +err);

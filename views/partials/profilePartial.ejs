@@ -4,7 +4,7 @@
 	    <% if (selfProfile) { %>
 	    	<button class="editDescription">Edit Description</button>
 	    <% } %>
-<h4 id="userDescription"><%=user.description%></h4>
+        <span id="userDescription"><h4><%-user.description.replace('\n', '</h4><h4>')%></h4></span>
     </div>
     <h2><%=user.name%>'s posts:<h2>
     <% for (var i=0; i<feed.length; i++) {%>

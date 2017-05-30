@@ -216,6 +216,9 @@ module.exports = function(app, passport, auth, upload) {
 	    	for (var i=0; i<req.files.length; i++) {
 	    		doUpload(i);
 	    	}
+	    	if (req.files.length===0) {
+	    		submitPost();
+	    	}
 
 
 		    function doUpload(i){
@@ -265,32 +268,37 @@ module.exports = function(app, passport, auth, upload) {
 	    		    		return res.status(400).send(message);
 	    		    	}
 	    		    }
-	    		    Post
-	    		    .create({
-	    				title: req.body.title,
-	    				content: req.body.content,
-	    				author: req.user._id,
-	    				media: req.body.media
-	    		    })
-	    		    .then(newPost => {
-	    		    	console.log(newPost);
-	    		    	var users={};
-	    		    	users[req.user._id]=req.user.name;
-	    		    	var comments={};
-	    		    	comments[newPost._id] = [];
-	    		    	res.render('singlePost.ejs', {
-	    		    		feed: [newPost],
-	    		    		user: req.user,
-	    		    		comments: comments,
-	    		    		users: users
-	    		    	});
-	    		    })
-	    		    .catch(err => {
-	    		        console.error(err);
-	    		        res.status(500).json({error:'Something went wrong'});
-	    		    });
+	    		    submitPost();
 		    	}
 		    }
+
+		    function submitPost() {
+		    	Post
+    		    .create({
+    				title: req.body.title,
+    				content: req.body.content,
+    				author: req.user._id,
+    				media: req.body.media,
+    				created: Date.now()
+    		    })
+    		    .then(newPost => {
+    		    	var users={};
+    		    	users[req.user._id]=req.user.name;
+    		    	var comments={};
+    		    	comments[newPost._id] = [];
+    		    	res.render('singlePost.ejs', {
+    		    		feed: [newPost],
+    		    		user: req.user,
+    		    		comments: comments,
+    		    		users: users
+    		    	});
+    		    })
+    		    .catch(err => {
+    		        console.error(err);
+    		        res.status(500).json({error:'Something went wrong'});
+    		    });
+		    }
+
 		}); //ends multer upload
 	}); //ends POST /post
 
@@ -301,7 +309,7 @@ module.exports = function(app, passport, auth, upload) {
 		// console.log('Full request---', req);
 		Comment
 	    .create({
-			comment: req.body.comment,
+			comment: he.encode(req.body.comment),
 			authorID: req.user._id,
 			postID: req.body.postID
 	    })
@@ -320,7 +328,7 @@ module.exports = function(app, passport, auth, upload) {
 	        res.status(500).json({error: 'Something went wrong'});
 	    });
 
-	}); //ends POST /feed
+	}); 
 
 
 
@@ -505,6 +513,7 @@ module.exports = function(app, passport, auth, upload) {
 			console.log("-----Permissions error, can't edit another user's profile-----", err);
 			res.status(500).json(err);
 		}
+
 
 		User.findOneAndUpdate({_id: req.params.userID}, {$set:{"local.description": req.body.description}}).exec()
 		.then(function(user, err) {
